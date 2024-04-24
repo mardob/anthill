@@ -66,6 +66,7 @@ public class NoteController {
         noteService.updateNote(note);
     }
 
+
     //TODO delete ticket connection
     @DeleteMapping(value="/api/notes/{id}")
     @ResponseBody

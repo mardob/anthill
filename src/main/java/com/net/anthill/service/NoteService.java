@@ -26,20 +26,11 @@ public class NoteService {
     private Date dateOfExecution;
     ModelMapper modelMapper = new ModelMapper(); // Can't be mocked as it is not injected
 
-   // @Autowired
-  //  private TicketRepo ticketRepository;
-
     @Autowired
     public NoteService(TicketService ticketService, NoteRepo noteRepository){
         this.noteRepository = noteRepository;
         this.ticketService = ticketService;
     }
-/*
-    public List<NoteDto> getNotesOfTicket(long ticketId){
-        List<NoteDto> notes = new ArrayList<NoteDto>();
-        noteRepository.findNotesRelatedToItem(ticketId).forEach(item -> notes.add(modelMapper.map(item, NoteDto.class)));
-        return notes;
-    }*/
 
     public List<NoteDto> getNotes(){
         List<NoteDto> data = new ArrayList<NoteDto>();
@@ -53,19 +44,19 @@ public class NoteService {
     }
 
     public List<NoteDto> getNotesByTicketId(long ticketId){
-        List<NoteDto> data = new ArrayList<NoteDto>();
-        noteRepository.findNotesRelatedToTicket(ticketId).forEach(item -> data.add(modelMapper.map(item, NoteDto.class)));
-        return data;
+        List<NoteDto> notes = new ArrayList<NoteDto>();
+        noteRepository.findNotesRelatedToTicket(ticketId).forEach(item -> notes.add(modelMapper.map(item, NoteDto.class)));
+        return notes;
     }
 
     @Transactional
     public void createNote(NoteDto noteDto){//TODO for some reason id here is used in ticket it is ignored, add manual ignore on id to make it clear
         System.out.println("deleteNoteById in NoteService called with " + noteDto.toString());
         Note note = modelMapper.map(noteDto, Note.class);
-        //TODO make it in one transaction)
+        //TODO test if it is in one transaction
         noteRepository.save(note);
         ticketService.addNoteToTicket(note);
-        //TODO make it in one transaction)
+        //TODO test if it is in one transaction
     }
 
     public void deleteNoteById(long noteId){

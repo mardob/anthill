@@ -17,8 +17,6 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
- //   @Autowired
- //   private NoteService noteService;
 
     // @PatchMapping equal to @RequestMapping(method= RequestMethod.PATCH)
     // @GetMapping     same for get
@@ -27,10 +25,6 @@ public class TicketController {
     public List<TicketDto> getTickets(){
         System.out.println("Fetching tickets");
         List <TicketDto> tickets = ticketService.getTickets();
-       /* for(TicketDto ticket : tickets) {
-            ticket.add(linkTo(methodOn(TicketController.class).getTicketsNotes(ticket.getId())).withRel("Notes"));
-            ticket.add(linkTo(methodOn(TicketController.class).getTicket(ticket.getId())).withSelfRel());
-        }*/
         return tickets;
     }
 
@@ -39,7 +33,6 @@ public class TicketController {
     public TicketDto getTicket(@NotBlank @PathVariable(value="id") Long ticketId){
         System.out.println("Fetching TicketDto with id " + ticketId);
         TicketDto ticket = ticketService.getTicketById(ticketId);
-        //ticket.add(linkTo(methodOn(TicketController.class).getTicketsNotes(ticketId)).withSelfRel());
         return ticket;
     }
 /* TODO need to implement
