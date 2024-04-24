@@ -1,6 +1,6 @@
 package com.net.anthill.dto;
 
-import com.net.anthill.model.Ticket;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

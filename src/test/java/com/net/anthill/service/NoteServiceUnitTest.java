@@ -96,9 +96,9 @@ class NoteServiceUnitTest {
 	void GIVENoteDtoWHENcreateNoteTHENnoteCreated(){
 		//GIVEN
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
-		ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
+		//ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
 		Mockito.when(noteRepository.save(any(Note.class))).then(AdditionalAnswers.returnsFirstArg());
-		doNothing().when(ticketService).addNoteToTicket(any(Note.class));
+		//doNothing().when(ticketService).addNoteToTicket(any(Note.class));
 
 		//WHEN
 		NoteService.createNote(buildNoteDto());
@@ -106,8 +106,8 @@ class NoteServiceUnitTest {
 
 		//THEN
 		verify(noteRepository).save(saveMethodCapture.capture());
-		verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
-		assertThat(addNoteToTicketCapture.getValue()).isEqualTo(saveMethodCapture.getValue());
+		//verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
+		//assertThat(addNoteToTicketCapture.getValue()).isEqualTo(saveMethodCapture.getValue());
 	}
 
 	@Test

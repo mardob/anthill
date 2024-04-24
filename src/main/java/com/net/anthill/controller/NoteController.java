@@ -59,7 +59,6 @@ public class NoteController {
     }
 
 
-    //TODO how to handle ticket connection
     @PutMapping(value="/api/notes/{id}")
     @ResponseBody
     public void updateNote(@NotBlank @RequestBody NoteDto note){
@@ -67,7 +66,6 @@ public class NoteController {
     }
 
 
-    //TODO delete ticket connection
     @DeleteMapping(value="/api/notes/{id}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.NO_CONTENT)

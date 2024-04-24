@@ -45,8 +45,6 @@ public class Ticket {
     @Enumerated(EnumType.ORDINAL)
     @Setter private State state = State.NEW;
 
-    @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Setter private Set<Note> notes = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ASSIGNEE_ID")

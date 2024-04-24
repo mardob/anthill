@@ -24,7 +24,5 @@ public class TicketDto extends RepresentationModel<TicketDto> {
 
     @Setter private Date dateCreated = new Date();
 
-//    @Getter @Setter private Set<Note> notes;
-
 
 }

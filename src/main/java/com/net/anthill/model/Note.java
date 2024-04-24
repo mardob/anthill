@@ -31,8 +31,6 @@ public class Note  {
     @NonNull
     @Setter private Date dateCreated = new Date();
 
-  //  @OneToOne(cascade = CascadeType.ALL)
-  //  @JoinColumn(name = "TICKET_ID")
     @ManyToOne
     @JoinColumn(name="ticketId", nullable=false)
     @NonNull
@@ -43,7 +41,4 @@ public class Note  {
     @Setter private User creator;
 
 
-    //TODO future:
-    // creator(user)
-    // ticket it is noted in
 }

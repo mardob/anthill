@@ -49,14 +49,10 @@ public class NoteService {
         return notes;
     }
 
-    @Transactional
     public void createNote(NoteDto noteDto){//TODO for some reason id here is used in ticket it is ignored, add manual ignore on id to make it clear
         System.out.println("deleteNoteById in NoteService called with " + noteDto.toString());
         Note note = modelMapper.map(noteDto, Note.class);
-        //TODO test if it is in one transaction
         noteRepository.save(note);
-        ticketService.addNoteToTicket(note);
-        //TODO test if it is in one transaction
     }
 
     public void deleteNoteById(long noteId){

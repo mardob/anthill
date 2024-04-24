@@ -51,12 +51,6 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public void addNoteToTicket(@NotNull Note note){
-        Ticket ticket = getTicket(note.getNoteId()).orElseThrow();//TODO add case of no ticket found
-        ticket.getNotes().add(note);
-        ticketRepository.save(ticket);
-    }
-
     private Optional<Ticket> getTicket(long id){
         return ticketRepository.findById(id);
     }

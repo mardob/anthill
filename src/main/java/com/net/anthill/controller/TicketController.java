@@ -35,14 +35,7 @@ public class TicketController {
         TicketDto ticket = ticketService.getTicketById(ticketId);
         return ticket;
     }
-/* TODO need to implement
-    @GetMapping(value="/api/tickets/{id}/notes")
-    @ResponseBody
-    public List<NoteDto> getTicketsNotes(@NotBlank @PathVariable(value="id") Long ticketId){
-        System.out.println("Fetching ticket with id " + ticketId);
-        List<NoteDto> notes = noteService.getNotesOfTicket(ticketId);
-        return notes;
-    }*/
+
 
     @PostMapping(value="/api/tickets/")
     @ResponseBody
