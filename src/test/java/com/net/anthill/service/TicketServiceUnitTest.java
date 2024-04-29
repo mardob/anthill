@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,18 +41,25 @@ class TicketServiceUnitTest {
 	}
 
 	//TODO add mock for mapper when able
+
 	@Test
-	void GIVENnothingWHENgetTicketsTHENlistOfNoteDtosReturned() {
+	void GIVENnothingWHENgetPaginatedTicketsTHENlistOfNoteDtosReturned() {
 		//GIVEN
 		List<Ticket> listOfTickets = buildTickets();
-		Mockito.when(ticketRepository.findAll()).thenReturn(listOfTickets);
+		Pageable paegable = PageRequest.of(0,5);
+		Page page = new PageImpl(listOfTickets, paegable, listOfTickets.size());
+
+		ArgumentCaptor<Pageable> pageableCapture = ArgumentCaptor.forClass(Pageable.class);
+		Mockito.when(ticketRepository.findAll(any(Pageable.class))).thenReturn(page);
 
 		//WHEN
-		List<TicketDto> result = ticketService.getTickets();
+		List<TicketDto> result = ticketService.getPaginatedTickets(paegable.getPageNumber(), paegable.getPageSize());
 
 		//THEN
 		assertThat(result).hasSize(listOfTickets.size());
-		verify(ticketRepository).findAll();
+		verify(ticketRepository).findAll(pageableCapture.capture());
+		assertThat(pageableCapture.getValue()).isEqualTo(paegable);
+		verify(ticketRepository).findAll(paegable);
 	}
 
 	//TODO add mock for mapper when able

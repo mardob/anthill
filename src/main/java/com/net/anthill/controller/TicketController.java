@@ -20,11 +20,16 @@ public class TicketController {
 
     // @PatchMapping equal to @RequestMapping(method= RequestMethod.PATCH)
     // @GetMapping     same for get
+
+
     @GetMapping(value="/api/tickets/")
     @ResponseBody
-    public List<TicketDto> getTickets(){
-        System.out.println("Fetching tickets");
-        List <TicketDto> tickets = ticketService.getTickets();
+    public List<TicketDto> getTickets(
+        @RequestParam(required = false, defaultValue = "5", value="pageSize") int pageSize,
+        @RequestParam(required = false, defaultValue = "0", value="page") int pageId){
+
+        System.out.println("Fetching paged tickets with page " + pageId + " and pageSize " + pageSize );
+        List <TicketDto> tickets = ticketService.getPaginatedTickets(pageId, pageSize);
         return tickets;
     }
 
