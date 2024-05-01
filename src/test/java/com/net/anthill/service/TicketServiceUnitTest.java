@@ -1,29 +1,23 @@
 package com.net.anthill.service;
 
-import com.net.anthill.dto.NoteDto;
 import com.net.anthill.dto.TicketDto;
-import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
-import com.net.anthill.model.User;
-import com.net.anthill.repository.NoteRepo;
 import com.net.anthill.repository.TicketRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -43,7 +37,7 @@ class TicketServiceUnitTest {
 	//TODO add mock for mapper when able
 
 	@Test
-	void GIVENnothingWHENgetPaginatedTicketsTHENlistOfNoteDtosReturned() {
+	void GIVENnothingWHENgetPaginatedTicketsTHENlistOfTicketDtosReturned() {
 		//GIVEN
 		List<Ticket> listOfTickets = buildTickets();
 		Pageable paegable = PageRequest.of(0,5);
@@ -64,7 +58,7 @@ class TicketServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENnoteIdWHENgetNoteByIdTHETicketDtoReturned() {
+	void GIVENnoteIdWHENgetTicketByIdTHETicketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 		Mockito.when(ticketRepository.findById(ticket.getTicketId())).thenReturn(Optional.of(ticket));
@@ -79,14 +73,14 @@ class TicketServiceUnitTest {
 	}
 
 	@Test
-	void GIVENoteDtoWHENcreateNoteTHENnoteCreated(){
+	void GIVETicketDtoWHENcreateTicketTHENticketCreated(){
 		//GIVEN
 		TicketDto ticket = buildTicketDto();
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
 		Mockito.when(ticketRepository.save(any(Ticket.class))).then(AdditionalAnswers.returnsFirstArg());
 
 		//WHEN
-		ticketService.createTicket(buildTicketDto());
+		ticketService.createTicket(ticket);
 
 		//THEN
 		verify(ticketRepository).save(saveMethodCapture.capture());
@@ -94,7 +88,7 @@ class TicketServiceUnitTest {
 	}
 
 	@Test
-	void GIVENnoteIdWHENdeleteNoteByIdTHENnoteDtoReturned() {
+	void GIVENticketIdWHENdeleteTicketByIdTHENticketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 
@@ -107,7 +101,7 @@ class TicketServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENoteDtoWHENupdateNoteTHENnoteCreated(){
+	void GIVETicketDtoWHENupdateTicketTHENticketCreated(){
 		//GIVEN
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
 		Mockito.when(ticketRepository.save(any(Ticket.class))).then(AdditionalAnswers.returnsFirstArg());
