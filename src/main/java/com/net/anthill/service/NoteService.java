@@ -3,8 +3,6 @@ package com.net.anthill.service;
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.model.Note;
 import com.net.anthill.repository.NoteRepo;
-import com.net.anthill.repository.TicketRepo;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -49,9 +50,10 @@ public class NoteService {
         return notes;
     }
 
-    public void createNote(NoteDto noteDto){//TODO for some reason id here is used in ticket it is ignored, add manual ignore on id to make it clear
-        System.out.println("deleteNoteById in NoteService called with " + noteDto.toString());
-        Note note = modelMapper.map(noteDto, Note.class);
+    public void createNote(NoteDto noteDto){
+        NoteDto cleanedUpDto = deleteExtraFields(noteDto); //TODO In future either do this in mapper or make unique DTO for create call
+        System.out.println("deleteNoteById in NoteService called with " + cleanedUpDto.toString());
+        Note note = modelMapper.map(cleanedUpDto, Note.class);
         noteRepository.save(note);
     }
 
@@ -67,4 +69,9 @@ public class NoteService {
         noteRepository.save(note);
     }
 
+    private NoteDto deleteExtraFields(NoteDto noteDto){
+        noteDto.setId(0);
+        noteDto.setDateCreated(new Date());
+        return noteDto;
+    }
 }
