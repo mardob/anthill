@@ -1,6 +1,7 @@
 package com.net.anthill.model;
 
-import com.net.anthill.cosntants.State;
+import com.net.anthill.constants.Severity;
+import com.net.anthill.constants.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,11 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.validation.constraints.NotBlank;
 
 
-import java.io.Serializable;
 import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Getter
 @Entity
@@ -43,8 +42,10 @@ public class Ticket {
     @Setter private Date lastUpdated = null;
 
     @Enumerated(EnumType.ORDINAL)
-    @Setter private State state = State.NEW;
+    @Setter private Status status;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Setter private Severity severity;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ASSIGNEE_ID")

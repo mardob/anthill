@@ -1,5 +1,7 @@
 package com.net.anthill.dto;
 
+import com.net.anthill.constants.Severity;
+import com.net.anthill.constants.Status;
 import com.net.anthill.model.Note;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Null;
@@ -24,5 +26,8 @@ public class TicketDto extends RepresentationModel<TicketDto> {
 
     @Setter private Date dateCreated = new Date();
 
+    @Setter private Status status;
+
+    @Setter private Severity severity;
 
 }
