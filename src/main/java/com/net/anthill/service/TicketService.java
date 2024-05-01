@@ -1,7 +1,7 @@
 package com.net.anthill.service;
 
+import com.net.anthill.constants.Status;
 import com.net.anthill.dto.TicketDto;
-import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
 import com.net.anthill.repository.TicketRepo;
 import jakarta.validation.constraints.NotNull;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -45,7 +43,10 @@ public class TicketService {
     }
 
     public void createTicket(@NotNull TicketDto ticketDto){
-        Ticket ticket = modelMapper.map(ticketDto, Ticket.class);
+        //TODO In future either do this in mapper or make unique DTO for create call
+        TicketDto cleanedDto = deleteUnnecesaryFields(ticketDto);
+        Ticket ticket = modelMapper.map(cleanedDto, Ticket.class);
+
         ticketRepository.save(ticket);
     }
 
@@ -62,6 +63,11 @@ public class TicketService {
         this.ticketRepository.deleteById(itemId);
     }
 
-
+    private TicketDto deleteUnnecesaryFields(TicketDto ticketDto){
+        ticketDto.setId(0);
+        ticketDto.setStatus(Status.NEW);
+        ticketDto.setDateCreated(new Date());
+        return ticketDto;
+    }
 
 }
