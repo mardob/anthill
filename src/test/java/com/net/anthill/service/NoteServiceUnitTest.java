@@ -3,14 +3,11 @@ package com.net.anthill.service;
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
-import com.net.anthill.model.User;
+import com.net.anthill.model.UserMetaData;
 import com.net.anthill.repository.NoteRepo;
-import com.net.anthill.repository.TicketRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -20,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -154,7 +150,7 @@ class NoteServiceUnitTest {
 	private Note buildNote(long ticketId){
 		Ticket ticket = new Ticket();
 		ticket.setTicketId(ticketId);
-		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new User());
+		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new UserMetaData());
 	}
 
 	private List<Note> buildNotes(){

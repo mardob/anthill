@@ -49,11 +49,11 @@ public class Ticket {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ASSIGNEE_ID")
-    @Setter private User assignedUser = null;
+    @Setter private UserMetaData assignedUserMetaData = null;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "REPORTER_ID")
-    @Setter private User reporter;
+    @Setter private UserMetaData reporter;
 
 
   //  @Getter @Setter private Pile pile;
@@ -61,11 +61,6 @@ public class Ticket {
     //TODO future:
     // assignedUser
     // reporter
-
-    //done
-    // state
-    // @Getter @Setter List<String> notes;
-
 
     // typeOfTicket is it bug, new feature
 }
