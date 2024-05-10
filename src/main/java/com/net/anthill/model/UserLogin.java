@@ -18,7 +18,7 @@ public class UserLogin implements UserDetails {
 
   @Id
   @Column(name="username", unique = true)
-  private String userName;
+  private String username;
 
   @Column(name = "password")
   private String password;
@@ -41,13 +41,9 @@ public class UserLogin implements UserDetails {
 
   @Override
   public String getUsername() {
-    return userName;
+    return username;
   }
 
-/*
-  public String getUserName() {
-    return userName;
-  }*/
 
   @Override
   public boolean isAccountNonExpired() {

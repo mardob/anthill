@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @RestResource(exported = false) @Repository
 public interface UserLoginRepo extends CrudRepository<UserLogin, Long> {
-  public Boolean existsUserByUserName(String userName);
+  public Boolean existsUserByUsername(String username);
 
 
-  public UserLogin findUserLoginByUserName(String userName);
+  public UserLogin findUserLoginByUsername(String username);
 
 }
