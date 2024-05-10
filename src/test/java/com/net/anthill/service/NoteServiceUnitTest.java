@@ -42,7 +42,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENnothingWHENgetNotesTHENlistOfNoteDtosReturned() {
+	void GIVEN_nothing_WHEN_getNotes_THEN_listOfNoteDtosReturned() {
 		//GIVEN
 		List<Note> listOfNotes = buildNotes();
 		Mockito.when(noteRepository.findAll()).thenReturn(listOfNotes);
@@ -57,7 +57,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENnoteIdWHENgetNoteByIdTHENnoteDtoReturned() {
+	void GIVEN_noteId_WHEN_getNoteById_THEN_noteDtoReturned() {
 		//GIVEN
 		Note note = buildNote();
 		Mockito.when(noteRepository.findById(note.getNoteId())).thenReturn(Optional.of(note));
@@ -74,7 +74,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENticketIdWHENgetNotesByTicketIdTHENnoteDtoReturned() {
+	void GIVEN_ticketId_WHEN_getNotesByTicketId_THEN_noteDtoReturned() {
 		//GIVEN
 		long ticketId = 2L;
 		List<Note> notes = buildNotes();
@@ -89,7 +89,7 @@ class NoteServiceUnitTest {
 	}
 
 	@Test
-	void GIVENoteDtoWHENcreateNoteTHENnoteCreated(){
+	void GIVEN_noteDto_WHEN_createNote_THEN_noteCreated(){
 		//GIVEN
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
 		//ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
@@ -107,7 +107,7 @@ class NoteServiceUnitTest {
 	}
 
 	@Test
-	void GIVENnoteIdWHENdeleteNoteByIdTHENnoteDtoReturned() {
+	void GIVEN_noteId_WHEN_deleteNoteById_THEN_noteDtoReturned() {
 		//GIVEN
 		Note note = buildNote();
 
@@ -120,7 +120,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENoteDtoWHENupdateNoteTHENnoteCreated(){
+	void GIVEN_noteDto_WHEN_updateNote_THEN_noteCreated(){
 		//GIVEN
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
 		Mockito.when(noteRepository.save(any(Note.class))).then(AdditionalAnswers.returnsFirstArg());

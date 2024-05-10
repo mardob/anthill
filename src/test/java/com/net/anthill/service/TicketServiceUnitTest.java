@@ -37,7 +37,7 @@ class TicketServiceUnitTest {
 	//TODO add mock for mapper when able
 
 	@Test
-	void GIVENnothingWHENgetPaginatedTicketsTHENlistOfTicketDtosReturned() {
+	void GIVEN_nothing_WHEN_getPaginatedTickets_THEN_listOfTicketDtosReturned() {
 		//GIVEN
 		List<Ticket> listOfTickets = buildTickets();
 		Pageable paegable = PageRequest.of(0,5);
@@ -56,9 +56,8 @@ class TicketServiceUnitTest {
 		verify(ticketRepository).findAll(paegable);
 	}
 
-	//TODO add mock for mapper when able
 	@Test
-	void GIVENnoteIdWHENgetTicketByIdTHETicketDtoReturned() {
+	void GIVEN_noteId_WHEN_getTicketByIdr_THEN_TicketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 		Mockito.when(ticketRepository.findById(ticket.getTicketId())).thenReturn(Optional.of(ticket));
@@ -73,7 +72,7 @@ class TicketServiceUnitTest {
 	}
 
 	@Test
-	void GIVETicketDtoWHENcreateTicketTHENticketCreated(){
+	void GIVEN_TicketDto_WHEN_createTicket_THEN_ticketCreated(){
 		//GIVEN
 		TicketDto ticket = buildTicketDto();
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
@@ -88,7 +87,7 @@ class TicketServiceUnitTest {
 	}
 
 	@Test
-	void GIVENticketIdWHENdeleteTicketByIdTHENticketDtoReturned() {
+	void GIVEN_ticketId_WHEN_deleteTicketById_THEN_ticketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 
@@ -101,7 +100,7 @@ class TicketServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVETicketDtoWHENupdateTicketTHENticketCreated(){
+	void GIVEN_TicketDto_WHEN_updateTicket_THEN_ticketCreated(){
 		//GIVEN
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
 		Mockito.when(ticketRepository.save(any(Ticket.class))).then(AdditionalAnswers.returnsFirstArg());
