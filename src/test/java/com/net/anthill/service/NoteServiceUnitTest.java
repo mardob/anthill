@@ -3,7 +3,7 @@ package com.net.anthill.service;
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
-import com.net.anthill.model.UserMetaData;
+import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.NoteRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -150,7 +150,7 @@ class NoteServiceUnitTest {
 	private Note buildNote(long ticketId){
 		Ticket ticket = new Ticket();
 		ticket.setTicketId(ticketId);
-		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new UserMetaData());
+		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new UserMetadata());
 	}
 
 	private List<Note> buildNotes(){

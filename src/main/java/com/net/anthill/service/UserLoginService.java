@@ -21,14 +21,15 @@ public class UserLoginService implements UserDetailsService {
   private static PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
   private UserLoginRepo userLoginRepository;
-  private AuthoritiesRepo authoritiesRepo;
+
+  private UserMetadataService userMetadataService;
   private ModelMapper modelMapper = new ModelMapper();
 
 
   @Autowired
-  public UserLoginService(UserLoginRepo userLoginRepository, AuthoritiesRepo authoritiesRepo){
+  public UserLoginService(UserLoginRepo userLoginRepository, UserMetadataService userMetadataService){
     this.userLoginRepository = userLoginRepository;
-    this.authoritiesRepo = authoritiesRepo;
+    this.userMetadataService = userMetadataService;
   }
 
   public UserLoginDto getUserLoginById(String username) {
@@ -42,12 +43,13 @@ public class UserLoginService implements UserDetailsService {
       System.out.println("User "+userLoginDto.getUsername()+" found");
       throw new UsernameNotFoundException(userLoginDto.getUsername());
     }
-    System.out.println("User not found, creating");
+    System.out.println("Username " + userLoginDto.getUsername() + " not found, creating");
     userLoginDto.setPassword(ENCODER.encode(userLoginDto.getPassword()));
 
     UserLogin userLogin = modelMapper.map(userLoginDto, UserLogin.class);
+    System.out.println("username to add " + userLogin.getUsername());
     userLoginRepository.save(userLogin);
-
+    userMetadataService.createMetadata(userLogin.getUsername());
   }
 
 

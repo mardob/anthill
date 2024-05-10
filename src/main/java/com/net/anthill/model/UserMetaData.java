@@ -12,26 +12,28 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter @Setter
 @Table(name="USER_METADATA")
-public class UserMetaData {
+public class UserMetadata {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name="USER_NAME")
-    private String userName;
 
-    @NonNull private String email;
+    @Column(name="USER_NAME")
+    private String username;
+
 
     @Column(name="DATE_CREATED")
     @CreationTimestamp
-    @NonNull private Date dateCreated = new Date();
+    @NonNull private Date dateCreated;
 
-    @Column(name="LAST_LOGGED_IN")
+    @Column(name="LAST_LOGGED_IN") //TODO need to manually set during login
     private Date lastLoggedIn;
 
-    @Column(name="LAST_UPDATED")
+    @Column(name="LAST_UPDATED") //TODO in future probably will handle manually
     @UpdateTimestamp
     private Date lastUpdated;
+
+
 
   /*  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "id"),

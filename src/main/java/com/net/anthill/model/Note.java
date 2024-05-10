@@ -37,7 +37,7 @@ public class Note  {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CREATOR_ID")
-    @Setter private UserMetaData creator;
+    @Setter private UserMetadata creator;
 
 
 }

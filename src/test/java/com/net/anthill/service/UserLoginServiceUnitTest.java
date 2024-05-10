@@ -24,6 +24,9 @@ public class UserLoginServiceUnitTest {
   @Mock
   private UserLoginRepo userLoginRepo;
 
+  @Mock
+  private UserMetadataService userMetadataService;
+
   @InjectMocks
   UserLoginService userLoginService;
 
@@ -59,11 +62,11 @@ public class UserLoginServiceUnitTest {
     ArgumentCaptor<UserLogin> saveMethodCapture = ArgumentCaptor.forClass(UserLogin.class);
     Mockito.when(userLoginRepo.save(any(UserLogin.class))).then(AdditionalAnswers.returnsFirstArg());
 
-
     //WHEN
     userLoginService.createUserLogin(userLoginDto);
 
     //THEN
+    Mockito.verify(userMetadataService).createMetadata(userLoginDto.getUsername());
     verify(userLoginRepo).save(saveMethodCapture.capture());
     UserLogin sendUserLogin =  saveMethodCapture.getValue();
     assertThat(sendUserLogin).isNotNull();
