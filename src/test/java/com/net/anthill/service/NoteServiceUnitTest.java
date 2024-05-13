@@ -3,14 +3,11 @@ package com.net.anthill.service;
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
-import com.net.anthill.model.User;
+import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.NoteRepo;
-import com.net.anthill.repository.TicketRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -20,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -46,7 +42,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENnothingWHENgetNotesTHENlistOfNoteDtosReturned() {
+	void GIVEN_nothing_WHEN_getNotes_THEN_listOfNoteDtosReturned() {
 		//GIVEN
 		List<Note> listOfNotes = buildNotes();
 		Mockito.when(noteRepository.findAll()).thenReturn(listOfNotes);
@@ -61,7 +57,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENnoteIdWHENgetNoteByIdTHENnoteDtoReturned() {
+	void GIVEN_noteId_WHEN_getNoteById_THEN_noteDtoReturned() {
 		//GIVEN
 		Note note = buildNote();
 		Mockito.when(noteRepository.findById(note.getNoteId())).thenReturn(Optional.of(note));
@@ -78,7 +74,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENticketIdWHENgetNotesByTicketIdTHENnoteDtoReturned() {
+	void GIVEN_ticketId_WHEN_getNotesByTicketId_THEN_noteDtoReturned() {
 		//GIVEN
 		long ticketId = 2L;
 		List<Note> notes = buildNotes();
@@ -93,7 +89,7 @@ class NoteServiceUnitTest {
 	}
 
 	@Test
-	void GIVENoteDtoWHENcreateNoteTHENnoteCreated(){
+	void GIVEN_noteDto_WHEN_createNote_THEN_noteCreated(){
 		//GIVEN
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
 		//ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
@@ -111,7 +107,7 @@ class NoteServiceUnitTest {
 	}
 
 	@Test
-	void GIVENnoteIdWHENdeleteNoteByIdTHENnoteDtoReturned() {
+	void GIVEN_noteId_WHEN_deleteNoteById_THEN_noteDtoReturned() {
 		//GIVEN
 		Note note = buildNote();
 
@@ -124,7 +120,7 @@ class NoteServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVENoteDtoWHENupdateNoteTHENnoteCreated(){
+	void GIVEN_noteDto_WHEN_updateNote_THEN_noteCreated(){
 		//GIVEN
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
 		Mockito.when(noteRepository.save(any(Note.class))).then(AdditionalAnswers.returnsFirstArg());
@@ -154,7 +150,7 @@ class NoteServiceUnitTest {
 	private Note buildNote(long ticketId){
 		Ticket ticket = new Ticket();
 		ticket.setTicketId(ticketId);
-		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new User());
+		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new UserMetadata());
 	}
 
 	private List<Note> buildNotes(){

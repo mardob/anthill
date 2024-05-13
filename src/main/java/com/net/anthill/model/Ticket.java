@@ -32,14 +32,14 @@ public class Ticket {
     @Column(name="DATE_CREATED")
     @CreationTimestamp
     @NonNull
-    @Setter private Date dateCreated = new Date();
+    @Setter private Date dateCreated;
 
     @Column(name="LAST_CHECKED")
-    @Setter private Date lastChecked = null;
+    @Setter private Date lastChecked;
 
     @Column(name="LAST_UPDATED")
     @UpdateTimestamp
-    @Setter private Date lastUpdated = null;
+    @Setter private Date lastUpdated;
 
     @Enumerated(EnumType.ORDINAL)
     @Setter private Status status;
@@ -47,13 +47,13 @@ public class Ticket {
     @Enumerated(EnumType.ORDINAL)
     @Setter private Severity severity;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ASSIGNEE_ID")
-    @Setter private User assignedUser = null;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Setter private UserMetadata assignedUser;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "REPORTER_ID")
-    @Setter private User reporter;
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @Setter private UserMetadata reportingUser;
+
+
 
 
   //  @Getter @Setter private Pile pile;
@@ -61,11 +61,6 @@ public class Ticket {
     //TODO future:
     // assignedUser
     // reporter
-
-    //done
-    // state
-    // @Getter @Setter List<String> notes;
-
 
     // typeOfTicket is it bug, new feature
 }

@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -38,7 +37,7 @@ public class Note  {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CREATOR_ID")
-    @Setter private User creator;
+    @Setter private UserMetadata creator;
 
 
 }

@@ -1,8 +1,11 @@
 package com.net.anthill.service;
 
 import com.net.anthill.dto.TicketDto;
+import com.net.anthill.dto.UserMetadataDto;
 import com.net.anthill.model.Ticket;
 import com.net.anthill.repository.TicketRepo;
+import com.net.anthill.security.AuthenticationFacade;
+import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +30,11 @@ class TicketServiceUnitTest {
 	@Mock
 	private TicketRepo ticketRepository;
 
+	@Mock
+	private AuthenticationFacade authenticationFacade;
+
+	@Mock
+	private UserMetadataService userMetadataService;
 	@InjectMocks
 	TicketService ticketService;
 
@@ -37,7 +46,7 @@ class TicketServiceUnitTest {
 	//TODO add mock for mapper when able
 
 	@Test
-	void GIVENnothingWHENgetPaginatedTicketsTHENlistOfTicketDtosReturned() {
+	void GIVEN_nothing_WHEN_getPaginatedTickets_THEN_listOfTicketDtosReturned() {
 		//GIVEN
 		List<Ticket> listOfTickets = buildTickets();
 		Pageable paegable = PageRequest.of(0,5);
@@ -56,9 +65,8 @@ class TicketServiceUnitTest {
 		verify(ticketRepository).findAll(paegable);
 	}
 
-	//TODO add mock for mapper when able
 	@Test
-	void GIVENnoteIdWHENgetTicketByIdTHETicketDtoReturned() {
+	void GIVEN_noteId_WHEN_getTicketByIdr_THEN_TicketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 		Mockito.when(ticketRepository.findById(ticket.getTicketId())).thenReturn(Optional.of(ticket));
@@ -73,22 +81,32 @@ class TicketServiceUnitTest {
 	}
 
 	@Test
-	void GIVETicketDtoWHENcreateTicketTHENticketCreated(){
+	void GIVEN_TicketDtoAndUserDetails_WHEN_createTicket_THEN_ticketCreated(){
 		//GIVEN
+		String username = "TestUsername";
 		TicketDto ticket = buildTicketDto();
+		Authentication authentication = buildAuthentication(username);
+		UserMetadataDto userMetadataDto = buildUserMetadataDto(username);
+
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
 		Mockito.when(ticketRepository.save(any(Ticket.class))).then(AdditionalAnswers.returnsFirstArg());
+		Mockito.when(authenticationFacade.getAuthentication()).thenReturn(authentication);
+		Mockito.when(userMetadataService.getUserMetadataByUsername(username)).thenReturn(userMetadataDto);
 
 		//WHEN
 		ticketService.createTicket(ticket);
 
 		//THEN
 		verify(ticketRepository).save(saveMethodCapture.capture());
-		assertThat(saveMethodCapture.getValue().getTicketId()).isEqualTo(ticket.getId());
+		Ticket persistedItem = saveMethodCapture.getValue();
+		assertThat(persistedItem).isNotNull();
+		assertThat(persistedItem.getTicketId()).isEqualTo(ticket.getId());
+		assertThat(persistedItem.getReportingUser()).isNotNull();
+		assertThat(persistedItem.getReportingUser().getUsername()).isEqualTo(username);
 	}
 
 	@Test
-	void GIVENticketIdWHENdeleteTicketByIdTHENticketDtoReturned() {
+	void GIVEN_ticketId_WHEN_deleteTicketById_THEN_ticketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
 
@@ -101,7 +119,7 @@ class TicketServiceUnitTest {
 
 	//TODO add mock for mapper when able
 	@Test
-	void GIVETicketDtoWHENupdateTicketTHENticketCreated(){
+	void GIVEN_TicketDto_WHEN_updateTicket_THEN_ticketCreated(){
 		//GIVEN
 		ArgumentCaptor<Ticket> saveMethodCapture = ArgumentCaptor.forClass(Ticket.class);
 		Mockito.when(ticketRepository.save(any(Ticket.class))).then(AdditionalAnswers.returnsFirstArg());
@@ -140,5 +158,18 @@ class TicketServiceUnitTest {
 			list.add(buildTicket(2L));
 		}
 		return list;
+	}
+
+	private Authentication buildAuthentication(String userName){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		Mockito.when(authentication.getName()).thenReturn(userName);
+		return authentication;
+	}
+
+	private UserMetadataDto buildUserMetadataDto(String username){
+		UserMetadataDto userMetadataDto = new UserMetadataDto();
+		userMetadataDto.setUsername(username);
+		userMetadataDto.setDateCreated(new Date());
+		return userMetadataDto;
 	}
 }
