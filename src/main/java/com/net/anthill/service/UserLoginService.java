@@ -62,9 +62,6 @@ public class UserLoginService implements UserDetailsService {
       System.out.println("Never found");
       throw new UsernameNotFoundException(username);
     }
-    System.out.println("returns " + userLogin.getUsername());
-    System.out.println( " / " + userLogin.getPassword() );
-    System.out.println(" / "+ userLogin.getAuthorities());
 
     return userLogin;
   }
