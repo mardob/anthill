@@ -2,14 +2,14 @@ package com.net.anthill.controller;
 
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.service.NoteService;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -29,7 +29,7 @@ public class NoteController {
 
     @GetMapping(value="/api/tickets/{ticketId}/notes/")
     @ResponseBody
-    public List<NoteDto> getTicketsNotes(@NotBlank @PathVariable(value="ticketId") Long ticketId){
+    public List<NoteDto> getTicketsNotes( @PathVariable(value="ticketId") Long ticketId){
         System.out.println("Fetching ticket's ["+ticketId+"] notes");
         List <NoteDto> notes = noteService.getNotesByTicketId(ticketId);
         return notes;
@@ -37,7 +37,7 @@ public class NoteController {
 
     @GetMapping(value="/api/notes/{id}")
     @ResponseBody
-    public NoteDto getNote(@NotBlank @PathVariable(value="id") Long noteId){
+    public NoteDto getNote( @PathVariable(value="id") Long noteId){
         System.out.println("Fetching note with id " + noteId);
         NoteDto note = noteService.getNoteById(noteId);
         return note;
@@ -45,7 +45,7 @@ public class NoteController {
 
     @GetMapping(value="/api/notes2/{id}")
     @ResponseBody
-    public NoteDto getNote2(@NotBlank @PathVariable(value="id") Long noteId){
+    public NoteDto getNote2( @PathVariable(value="id") Long noteId){
         System.out.println("Fetching note with id " + noteId);
         NoteDto note = noteService.getNoteById(noteId);
         note.add(linkTo(methodOn(NoteController.class).getNote2(noteId)).withSelfRel());
@@ -54,14 +54,14 @@ public class NoteController {
 
     @PostMapping(value="/api/notes/")
     @ResponseBody
-    public void createNote(@NotBlank @RequestBody NoteDto note){
+    public void createNote(@RequestBody NoteDto note){
         noteService.createNote(note);
     }
 
 
     @PutMapping(value="/api/notes/{id}")
     @ResponseBody
-    public void updateNote(@NotBlank @RequestBody NoteDto note){
+    public void updateNote(@RequestBody NoteDto note){
         noteService.updateNote(note);
     }
 
@@ -69,7 +69,7 @@ public class NoteController {
     @DeleteMapping(value="/api/notes/{id}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteNote(@NotBlank @PathVariable(value="id") Long noteId){
+    public void deleteNote(@PathVariable(value="id") Long noteId){
         System.out.println("deleteNote in NoteController called with " + noteId);
         noteService.deleteNoteById(noteId);
     }

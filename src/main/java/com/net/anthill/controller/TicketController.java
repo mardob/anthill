@@ -33,7 +33,7 @@ public class TicketController {
 
     @GetMapping(value="/api/tickets/{id}")
     @ResponseBody
-    public TicketDto getTicket(@NotBlank @PathVariable(value="id") Long ticketId){
+    public TicketDto getTicket(@PathVariable(value="id") Long ticketId){
         System.out.println("Fetching TicketDto with id " + ticketId);
         TicketDto ticket = ticketService.getTicketById(ticketId);
         return ticket;
@@ -48,7 +48,7 @@ public class TicketController {
 
     @PutMapping(value="/api/tickets/{id}")
     @ResponseBody
-    public void updateTicket(@NotBlank @PathVariable(value="id") Long ticketId, @NotBlank @RequestBody TicketDto ticket){
+    public void updateTicket(@PathVariable(value="id") Long ticketId, @NotBlank @RequestBody TicketDto ticket){
         ticket.setId(ticketId);
         ticketService.updateTicket(ticket);
     }
@@ -56,7 +56,7 @@ public class TicketController {
     @DeleteMapping(value="/api/tickets/{id}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTicket(@NotBlank @PathVariable(value="id") Long ticketId){
+    public void deleteTicket(@PathVariable(value="id") Long ticketId){
         ticketService.deleteTicketById(ticketId);
     }
 

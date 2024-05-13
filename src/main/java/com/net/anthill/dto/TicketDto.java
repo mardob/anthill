@@ -2,7 +2,6 @@ package com.net.anthill.dto;
 
 import com.net.anthill.constants.Severity;
 import com.net.anthill.constants.Status;
-import com.net.anthill.model.UserMetadata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ public class TicketDto extends RepresentationModel<TicketDto> {
 
     @Setter private Severity severity;
 
-    @Setter private UserMetadata assignedUser;
+    @Setter private UserMetadataDto assignedUser;
 
-    @Setter private UserMetadata reportingUser;
+    @Setter private UserMetadataDto reportingUser;
 }
