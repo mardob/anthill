@@ -82,6 +82,7 @@ public class TicketService {
         String username = authenticationFacade.getAuthentication().getName();
         UserMetadataDto userMetadataDto = userMetadataService.getUserMetadataByUsername(username);
         if(userMetadataDto != null) {
+            System.out.println("loged in details: " + userMetadataDto.getUsername());
             ticket.setReportingUser(modelMapper.map(userMetadataDto, UserMetadata.class));
         }//TODO add error handling
     }

@@ -3,15 +3,12 @@ package com.net.anthill.model;
 import com.net.anthill.constants.Severity;
 import com.net.anthill.constants.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import jakarta.validation.constraints.NotBlank;
 
-
-import java.util.*;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import java.util.Date;
 
 @Getter
 @Entity
@@ -47,10 +44,10 @@ public class Ticket {
     @Enumerated(EnumType.ORDINAL)
     @Setter private Severity severity;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Setter private UserMetadata assignedUser;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Setter private UserMetadata reportingUser;
 
 
