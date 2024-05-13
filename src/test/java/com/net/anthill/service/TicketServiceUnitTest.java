@@ -36,7 +36,7 @@ class TicketServiceUnitTest {
 	@Mock
 	private UserMetadataService userMetadataService;
 	@InjectMocks
-	TicketService ticketService;
+	private TicketService ticketService;
 
 	@BeforeEach
 	public void initMocks() {

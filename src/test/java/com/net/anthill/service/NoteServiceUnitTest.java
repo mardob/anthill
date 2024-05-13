@@ -1,10 +1,12 @@
 package com.net.anthill.service;
 
 import com.net.anthill.dto.NoteDto;
+import com.net.anthill.dto.UserMetadataDto;
 import com.net.anthill.model.Note;
 import com.net.anthill.model.Ticket;
 import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.NoteRepo;
+import com.net.anthill.security.AuthenticationFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +29,14 @@ class NoteServiceUnitTest {
 	@InjectMocks
 	private NoteService NoteService;
 	@Mock
-	NoteRepo noteRepository;
+	private NoteRepo noteRepository;
+
+
+	@Mock
+	private AuthenticationFacade authenticationFacade;
+
+	@Mock
+	private UserMetadataService userMetadataService;
 	@Mock
 	TicketService ticketService;
 
@@ -91,17 +101,30 @@ class NoteServiceUnitTest {
 	@Test
 	void GIVEN_noteDto_WHEN_createNote_THEN_noteCreated(){
 		//GIVEN
+		String username = "TestUsername";
+		NoteDto noteDto = buildNoteDto();
+		Authentication authentication = buildAuthentication(username);
+		UserMetadataDto userMetadataDto = buildUserMetadataDto(username);
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
 		//ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
 		Mockito.when(noteRepository.save(any(Note.class))).then(AdditionalAnswers.returnsFirstArg());
+
+		Mockito.when(authenticationFacade.getAuthentication()).thenReturn(authentication);
+		Mockito.when(userMetadataService.getUserMetadataByUsername(username)).thenReturn(userMetadataDto);
+
 		//doNothing().when(ticketService).addNoteToTicket(any(Note.class));
 
 		//WHEN
-		NoteService.createNote(buildNoteDto());
+		NoteService.createNote(noteDto);
 
 
 		//THEN
 		verify(noteRepository).save(saveMethodCapture.capture());
+		Note persistedItem = saveMethodCapture.getValue();
+		assertThat(persistedItem).isNotNull();
+		assertThat(persistedItem.getNoteId()).isEqualTo(noteDto.getId());
+		assertThat(persistedItem.getCreator()).isNotNull();
+		assertThat(persistedItem.getCreator().getUsername()).isEqualTo(username);
 		//verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
 		//assertThat(addNoteToTicketCapture.getValue()).isEqualTo(saveMethodCapture.getValue());
 	}
@@ -140,7 +163,13 @@ class NoteServiceUnitTest {
 
 
 	private NoteDto buildNoteDto(){
-		return new NoteDto(100L, "Test Testerson", "This is test noteDto", new Date(),1L);
+		NoteDto noteDto = new NoteDto();
+		noteDto.setId(100L);
+		noteDto.setName("Note test name");
+		noteDto.setDescription("Note test description");
+		noteDto.setDateCreated(new Date());
+		noteDto.setTicketId(1L);
+		return noteDto;
 	}
 
 	private Note buildNote() {
@@ -159,5 +188,18 @@ class NoteServiceUnitTest {
 			list.add(buildNote(2L));
 		}
 		return list;
+	}
+
+	private Authentication buildAuthentication(String userName){
+		Authentication authentication = Mockito.mock(Authentication.class);
+		Mockito.when(authentication.getName()).thenReturn(userName);
+		return authentication;
+	}
+
+	private UserMetadataDto buildUserMetadataDto(String username){
+		UserMetadataDto userMetadataDto = new UserMetadataDto();
+		userMetadataDto.setUsername(username);
+		userMetadataDto.setDateCreated(new Date());
+		return userMetadataDto;
 	}
 }

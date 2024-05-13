@@ -35,8 +35,7 @@ public class Note  {
     @NonNull
     @Setter private Ticket ticket;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CREATOR_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     @Setter private UserMetadata creator;
 
 

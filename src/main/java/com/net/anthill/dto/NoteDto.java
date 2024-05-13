@@ -1,6 +1,7 @@
 package com.net.anthill.dto;
 
 
+import com.net.anthill.model.UserMetadata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,7 @@ public class NoteDto extends RepresentationModel<NoteDto> {
     @Setter private Date dateCreated = new Date();
 
     @Setter private Long ticketId;
+
+    @Setter private UserMetadata creator;
+
 }
