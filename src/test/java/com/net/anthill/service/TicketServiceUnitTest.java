@@ -55,7 +55,7 @@ class TicketServiceUnitTest {
 		Mockito.when(ticketRepository.findAll(any(Pageable.class))).thenReturn(page);
 
 		//WHEN
-		List<TicketDto> result = ticketService.getPaginatedTickets(paegable.getPageNumber(), paegable.getPageSize(), ApiConstants.DEFAULT_SORT_BY, ApiConstants.DEFAULT_SORT_DIRECTION);
+		Page<TicketDto> result = ticketService.getPaginatedTickets(paegable.getPageNumber(), paegable.getPageSize(), ApiConstants.DEFAULT_SORT_BY, ApiConstants.DEFAULT_SORT_DIRECTION);
 
 		//THEN
 		assertThat(result).hasSize(listOfTickets.size());

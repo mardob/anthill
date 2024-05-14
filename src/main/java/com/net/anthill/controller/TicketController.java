@@ -4,11 +4,10 @@ import com.net.anthill.constants.ApiConstants;
 import com.net.anthill.dto.TicketDto;
 import com.net.anthill.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class TicketController {
@@ -22,15 +21,16 @@ public class TicketController {
 
     @GetMapping(value="/api/tickets/")
     @ResponseBody
-    public List<TicketDto> getTickets(
+    public Page<TicketDto> getTickets(
         @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_PAGE_SIZE, value="pageSize") int pageSize,
         @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_PAGE_NUMBER, value="page") int pageId,
         @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_SORT_BY, value="sortBy") String sortBy,
         @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_SORT_DIRECTION, value="sortDirection") String sortDirection){
 
         System.out.println("Fetching paged tickets with page " + pageId + " and pageSize " + pageSize );
-        List <TicketDto> tickets = ticketService.getPaginatedTickets(pageId, pageSize, sortBy, sortDirection);
-        return tickets;
+        //List <TicketDto> tickets =
+        return ticketService.getPaginatedTickets(pageId, pageSize, sortBy, sortDirection);
+        //return tickets;
     }
 
     @GetMapping(value="/api/tickets/{id}")
