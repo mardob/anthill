@@ -70,15 +70,15 @@ class NoteServiceUnitTest {
 	void GIVEN_noteId_WHEN_getNoteById_THEN_noteDtoReturned() {
 		//GIVEN
 		Note note = buildNote();
-		Mockito.when(noteRepository.findById(note.getNoteId())).thenReturn(Optional.of(note));
+		Mockito.when(noteRepository.findById(note.getId())).thenReturn(Optional.of(note));
 
 		//WHEN
-		NoteDto result = NoteService.getNoteById(note.getNoteId());
+		NoteDto result = NoteService.getNoteById(note.getId());
 
 		//THEN
-		verify(noteRepository).findById(note.getNoteId());
+		verify(noteRepository).findById(note.getId());
 		assertThat(result).isNotNull();
-		assertThat(result.getId()).isEqualTo(note.getNoteId());
+		assertThat(result.getId()).isEqualTo(note.getId());
 	}
 
 
@@ -122,7 +122,7 @@ class NoteServiceUnitTest {
 		verify(noteRepository).save(saveMethodCapture.capture());
 		Note persistedItem = saveMethodCapture.getValue();
 		assertThat(persistedItem).isNotNull();
-		assertThat(persistedItem.getNoteId()).isEqualTo(noteDto.getId());
+		assertThat(persistedItem.getId()).isEqualTo(noteDto.getId());
 		assertThat(persistedItem.getCreator()).isNotNull();
 		assertThat(persistedItem.getCreator().getUsername()).isEqualTo(username);
 		//verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
@@ -135,10 +135,10 @@ class NoteServiceUnitTest {
 		Note note = buildNote();
 
 		//WHEN
-		NoteService.deleteNoteById(note.getNoteId());
+		NoteService.deleteNoteById(note.getId());
 
 		//THEN
-		verify(noteRepository).deleteById(note.getNoteId());
+		verify(noteRepository).deleteById(note.getId());
 	}
 
 	//TODO add mock for mapper when able
