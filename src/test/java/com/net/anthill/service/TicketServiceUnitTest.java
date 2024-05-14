@@ -1,24 +1,22 @@
 package com.net.anthill.service;
 
+import com.net.anthill.constants.ApiConstants;
 import com.net.anthill.dto.TicketDto;
 import com.net.anthill.dto.UserMetadataDto;
 import com.net.anthill.model.Ticket;
 import com.net.anthill.repository.TicketRepo;
 import com.net.anthill.security.AuthenticationFacade;
-import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,14 +47,15 @@ class TicketServiceUnitTest {
 	void GIVEN_nothing_WHEN_getPaginatedTickets_THEN_listOfTicketDtosReturned() {
 		//GIVEN
 		List<Ticket> listOfTickets = buildTickets();
-		Pageable paegable = PageRequest.of(0,5);
+		Sort sort = Sort.by(ApiConstants.DEFAULT_SORT_BY).ascending();
+		Pageable paegable = PageRequest.of(0,5, sort);
 		Page page = new PageImpl(listOfTickets, paegable, listOfTickets.size());
 
 		ArgumentCaptor<Pageable> pageableCapture = ArgumentCaptor.forClass(Pageable.class);
 		Mockito.when(ticketRepository.findAll(any(Pageable.class))).thenReturn(page);
 
 		//WHEN
-		List<TicketDto> result = ticketService.getPaginatedTickets(paegable.getPageNumber(), paegable.getPageSize());
+		List<TicketDto> result = ticketService.getPaginatedTickets(paegable.getPageNumber(), paegable.getPageSize(), ApiConstants.DEFAULT_SORT_BY, ApiConstants.DEFAULT_SORT_DIRECTION);
 
 		//THEN
 		assertThat(result).hasSize(listOfTickets.size());
@@ -69,15 +68,15 @@ class TicketServiceUnitTest {
 	void GIVEN_noteId_WHEN_getTicketByIdr_THEN_TicketDtoReturned() {
 		//GIVEN
 		Ticket ticket = buildTicket();
-		Mockito.when(ticketRepository.findById(ticket.getTicketId())).thenReturn(Optional.of(ticket));
+		Mockito.when(ticketRepository.findById(ticket.getId())).thenReturn(Optional.of(ticket));
 
 		//WHEN
-		TicketDto result = ticketService.getTicketById(ticket.getTicketId());
+		TicketDto result = ticketService.getTicketById(ticket.getId());
 
 		//THEN
-		verify(ticketRepository).findById(ticket.getTicketId());
+		verify(ticketRepository).findById(ticket.getId());
 		assertThat(result).isNotNull();
-		assertThat(result.getId()).isEqualTo(ticket.getTicketId());
+		assertThat(result.getId()).isEqualTo(ticket.getId());
 	}
 
 	@Test
@@ -100,7 +99,7 @@ class TicketServiceUnitTest {
 		verify(ticketRepository).save(saveMethodCapture.capture());
 		Ticket persistedItem = saveMethodCapture.getValue();
 		assertThat(persistedItem).isNotNull();
-		assertThat(persistedItem.getTicketId()).isEqualTo(ticket.getId());
+		assertThat(persistedItem.getId()).isEqualTo(ticket.getId());
 		assertThat(persistedItem.getReportingUser()).isNotNull();
 		assertThat(persistedItem.getReportingUser().getUsername()).isEqualTo(username);
 	}
@@ -111,10 +110,10 @@ class TicketServiceUnitTest {
 		Ticket ticket = buildTicket();
 
 		//WHEN
-		ticketService.deleteTicketById(ticket.getTicketId());
+		ticketService.deleteTicketById(ticket.getId());
 
 		//THEN
-		verify(ticketRepository).deleteById(ticket.getTicketId());
+		verify(ticketRepository).deleteById(ticket.getId());
 	}
 
 	//TODO add mock for mapper when able
@@ -148,7 +147,7 @@ class TicketServiceUnitTest {
 
 	private Ticket buildTicket(long ticketId){
 		Ticket ticket = new Ticket();
-		ticket.setTicketId(ticketId);
+		ticket.setId(ticketId);
 		return ticket;
 	}
 

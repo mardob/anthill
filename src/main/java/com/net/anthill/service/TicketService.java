@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TicketService {
@@ -42,8 +45,10 @@ public class TicketService {
     }
 
 
-    public List<TicketDto> getPaginatedTickets(int pageId, int pageSize){
-        Pageable pageRequest = PageRequest.of(pageId, pageSize);
+    public List<TicketDto> getPaginatedTickets(int pageId, int pageSize,String sortBy, String sortDirection){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageRequest = PageRequest.of(pageId, pageSize, sort);
         Page<Ticket> resultPage = ticketRepository.findAll(pageRequest);
         System.out.println("Page insides totalpages " + resultPage.getTotalPages()+" totalElements"+resultPage.getTotalElements());
         return resultPage.map(item -> modelMapper.map(item, TicketDto.class)).toList();

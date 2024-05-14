@@ -1,8 +1,8 @@
 package com.net.anthill.controller;
 
+import com.net.anthill.constants.ApiConstants;
 import com.net.anthill.dto.TicketDto;
 import com.net.anthill.service.TicketService;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,11 +23,13 @@ public class TicketController {
     @GetMapping(value="/api/tickets/")
     @ResponseBody
     public List<TicketDto> getTickets(
-        @RequestParam(required = false, defaultValue = "5", value="pageSize") int pageSize,
-        @RequestParam(required = false, defaultValue = "0", value="page") int pageId){
+        @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_PAGE_SIZE, value="pageSize") int pageSize,
+        @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_PAGE_NUMBER, value="page") int pageId,
+        @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_SORT_BY, value="sortBy") String sortBy,
+        @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_SORT_DIRECTION, value="sortDirection") String sortDirection){
 
         System.out.println("Fetching paged tickets with page " + pageId + " and pageSize " + pageSize );
-        List <TicketDto> tickets = ticketService.getPaginatedTickets(pageId, pageSize);
+        List <TicketDto> tickets = ticketService.getPaginatedTickets(pageId, pageSize, sortBy, sortDirection);
         return tickets;
     }
 
@@ -48,7 +50,7 @@ public class TicketController {
 
     @PutMapping(value="/api/tickets/{id}")
     @ResponseBody
-    public void updateTicket(@PathVariable(value="id") Long ticketId, @NotBlank @RequestBody TicketDto ticket){
+    public void updateTicket(@PathVariable(value="id") Long ticketId, @RequestBody TicketDto ticket){
         ticket.setId(ticketId);
         ticketService.updateTicket(ticket);
     }

@@ -178,7 +178,7 @@ class NoteServiceUnitTest {
 
 	private Note buildNote(long ticketId){
 		Ticket ticket = new Ticket();
-		ticket.setTicketId(ticketId);
+		ticket.setId(ticketId);
 		return new Note(1L, "Test Testerson", "This is test note", new Date(), new Date(), ticket, new UserMetadata());
 	}
 

@@ -18,7 +18,7 @@ public class Ticket {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter @Id
-    private long ticketId;
+    private long id;
 
     @Setter @NotBlank(message = "Items Name may not be blank")
     private String name;
