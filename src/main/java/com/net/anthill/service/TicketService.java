@@ -8,6 +8,7 @@ import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.TicketRepo;
 import com.net.anthill.security.AuthenticationFacade;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Optional;
 
-@Service
+@Service @Slf4j
 public class TicketService {
-    private Logger log = LoggerFactory.getLogger(TicketService.class);
     private TicketRepo ticketRepository;
     private AuthenticationFacade authenticationFacade;
     private UserMetadataService userMetadataService;
@@ -38,33 +38,42 @@ public class TicketService {
     }
 
     public TicketDto getTicketById(long id){
+        log.trace("getTicketById started");
         Optional<Ticket> opTicket = ticketRepository.findById(id);
         TicketDto ticketDto = modelMapper.map(opTicket.get(), TicketDto.class);//TODO handle error in case ticket not found
+        log.trace("getTicketById ended");
         return ticketDto;
     }
 
 
     public Page<TicketDto> getPaginatedTickets(int pageId, int pageSize,String sortBy, String sortDirection){
+        log.warn("getPaginatedTickets started");
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageRequest = PageRequest.of(pageId, pageSize, sort);
         Page<Ticket> resultPage = ticketRepository.findAll(pageRequest);
         System.out.println("Page insides totalpages " + resultPage.getTotalPages()+" totalElements"+resultPage.getTotalElements());
-        return resultPage.map(item -> modelMapper.map(item, TicketDto.class));
+        Page<TicketDto> resultingPage = resultPage.map(item -> modelMapper.map(item, TicketDto.class));
+        log.info("getPaginatedTickets ended");
+        return resultingPage;
     }
 
 
     public void createTicket(@NotNull TicketDto ticketDto){
+        log.trace("createTicket started");
         //TODO In future either do this in mapper or make unique DTO for create call
-        TicketDto cleanedDto = deleteUnnecesaryFields(ticketDto);
+        TicketDto cleanedDto = deleteUnnecessaryFields(ticketDto);
         Ticket ticket = modelMapper.map(cleanedDto, Ticket.class);
         populateReportingUser(ticket);
         ticketRepository.save(ticket);
+        log.trace("createTicket ended");
     }
 
     public void updateTicket(@NotNull TicketDto ticketDto){
+        log.trace("updateTicket started");
         Ticket ticket = modelMapper.map(ticketDto, Ticket.class);
         ticketRepository.save(ticket);
+        log.trace("updateTicket ended");
     }
 
     private Optional<Ticket> getTicket(long id){
@@ -75,20 +84,24 @@ public class TicketService {
         this.ticketRepository.deleteById(itemId);
     }
 
-    private TicketDto deleteUnnecesaryFields(TicketDto ticketDto){
+    private TicketDto deleteUnnecessaryFields(TicketDto ticketDto){
+        log.trace("deleteUnnecessaryFields started");
         ticketDto.setId(0);
         ticketDto.setStatus(Status.NEW);
         ticketDto.setDateCreated(new Date());
+        log.trace("deleteUnnecessaryFields ended");
         return ticketDto;
     }
 
     private void populateReportingUser(Ticket ticket){
+        log.trace("populateReportingUser started");
         String username = authenticationFacade.getAuthentication().getName();
         UserMetadataDto userMetadataDto = userMetadataService.getUserMetadataByUsername(username);
         if(userMetadataDto != null) {
             System.out.println("loged in details: " + userMetadataDto.getUsername());
             ticket.setReportingUser(modelMapper.map(userMetadataDto, UserMetadata.class));
         }//TODO add error handling
+        log.trace("populateReportingUser ended");
     }
 
 }
