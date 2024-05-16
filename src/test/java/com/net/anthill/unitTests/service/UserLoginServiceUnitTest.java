@@ -1,4 +1,4 @@
-package com.net.anthill.service;
+package com.net.anthill.unitTests.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import com.net.anthill.dto.UserLoginDto;
 import com.net.anthill.model.UserLogin;
 import com.net.anthill.repository.UserLoginRepo;
+import com.net.anthill.service.UserLoginService;
+import com.net.anthill.service.UserMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;

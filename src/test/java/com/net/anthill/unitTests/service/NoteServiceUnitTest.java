@@ -1,4 +1,4 @@
-package com.net.anthill.service;
+package com.net.anthill.unitTests.service;
 
 import com.net.anthill.dto.NoteDto;
 import com.net.anthill.dto.UserMetadataDto;
@@ -7,6 +7,9 @@ import com.net.anthill.model.Ticket;
 import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.NoteRepo;
 import com.net.anthill.security.AuthenticationFacade;
+import com.net.anthill.service.NoteService;
+import com.net.anthill.service.TicketService;
+import com.net.anthill.service.UserMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -27,7 +30,7 @@ class NoteServiceUnitTest {
 
 
 	@InjectMocks
-	private NoteService NoteService;
+	private com.net.anthill.service.NoteService NoteService;
 	@Mock
 	private NoteRepo noteRepository;
 
@@ -38,7 +41,7 @@ class NoteServiceUnitTest {
 	@Mock
 	private UserMetadataService userMetadataService;
 	@Mock
-	TicketService ticketService;
+    TicketService ticketService;
 
 	@BeforeEach
 	public void initMocks() {

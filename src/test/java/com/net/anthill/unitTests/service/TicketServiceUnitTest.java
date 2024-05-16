@@ -1,4 +1,4 @@
-package com.net.anthill.service;
+package com.net.anthill.unitTests.service;
 
 import com.net.anthill.constants.ApiConstants;
 import com.net.anthill.dto.TicketDto;
@@ -6,6 +6,8 @@ import com.net.anthill.dto.UserMetadataDto;
 import com.net.anthill.model.Ticket;
 import com.net.anthill.repository.TicketRepo;
 import com.net.anthill.security.AuthenticationFacade;
+import com.net.anthill.service.TicketService;
+import com.net.anthill.service.UserMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
