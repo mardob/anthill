@@ -7,19 +7,18 @@ import com.net.anthill.model.Ticket;
 import com.net.anthill.model.UserMetadata;
 import com.net.anthill.repository.NoteRepo;
 import com.net.anthill.security.AuthenticationFacade;
-import com.net.anthill.service.NoteService;
 import com.net.anthill.service.TicketService;
 import com.net.anthill.service.UserMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -118,7 +117,7 @@ class NoteServiceUnitTest {
 		//doNothing().when(ticketService).addNoteToTicket(any(Note.class));
 
 		//WHEN
-		NoteService.createNote(noteDto);
+		NoteDto resultingNoteDto = NoteService.createNote(noteDto);
 
 
 		//THEN
@@ -128,6 +127,7 @@ class NoteServiceUnitTest {
 		assertThat(persistedItem.getId()).isEqualTo(noteDto.getId());
 		assertThat(persistedItem.getCreator()).isNotNull();
 		assertThat(persistedItem.getCreator().getUsername()).isEqualTo(username);
+		assertThat(resultingNoteDto).isNotNull();
 		//verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
 		//assertThat(addNoteToTicketCapture.getValue()).isEqualTo(saveMethodCapture.getValue());
 	}

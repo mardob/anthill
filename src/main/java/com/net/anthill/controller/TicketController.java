@@ -44,8 +44,8 @@ public class TicketController {
 
     @PostMapping(value="/api/tickets/")
     @ResponseBody
-    public void createTicket(@RequestBody TicketDto ticket){
-        ticketService.createTicket(ticket);
+    public TicketDto createTicket(@RequestBody TicketDto ticket){
+        return ticketService.createTicket(ticket);
     }
 
     @PutMapping(value="/api/tickets/{id}")

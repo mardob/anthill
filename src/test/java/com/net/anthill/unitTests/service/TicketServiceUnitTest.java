@@ -95,7 +95,7 @@ class TicketServiceUnitTest {
 		Mockito.when(userMetadataService.getUserMetadataByUsername(username)).thenReturn(userMetadataDto);
 
 		//WHEN
-		ticketService.createTicket(ticket);
+		TicketDto resultingTicketDto = ticketService.createTicket(ticket);
 
 		//THEN
 		verify(ticketRepository).save(saveMethodCapture.capture());
@@ -104,6 +104,7 @@ class TicketServiceUnitTest {
 		assertThat(persistedItem.getId()).isEqualTo(ticket.getId());
 		assertThat(persistedItem.getReportingUser()).isNotNull();
 		assertThat(persistedItem.getReportingUser().getUsername()).isEqualTo(username);
+		assertThat(resultingTicketDto).isNotNull();
 	}
 
 	@Test

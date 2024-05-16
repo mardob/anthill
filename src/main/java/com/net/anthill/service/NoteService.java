@@ -9,8 +9,6 @@ import com.net.anthill.security.AuthenticationFacade;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,14 +60,17 @@ public class NoteService {
         return notes;
     }
 
-    public void createNote(NoteDto noteDto){
+    public NoteDto createNote(NoteDto noteDto){
         log.trace("createNote started");
         NoteDto cleanedUpDto = deleteExtraFields(noteDto); //TODO In future either do this in mapper or make unique DTO for create call
         System.out.println("deleteNoteById in NoteService called with " + cleanedUpDto.toString());
         Note note = modelMapper.map(cleanedUpDto, Note.class);
         populateNotesCreator(note);
-        log.trace("createNote ended");
         noteRepository.save(note);
+        NoteDto persistedNoteDto = modelMapper.map(note, NoteDto.class);
+        log.trace("createNote ended");
+        return persistedNoteDto;
+
     }
 
     public void deleteNoteById(long noteId){

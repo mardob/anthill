@@ -54,8 +54,8 @@ public class NoteController {
 
     @PostMapping(value="/api/notes/")
     @ResponseBody
-    public void createNote(@RequestBody NoteDto note){
-        noteService.createNote(note);
+    public NoteDto createNote(@RequestBody NoteDto note){
+        return noteService.createNote(note);
     }
 
 

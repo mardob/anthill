@@ -10,8 +10,6 @@ import com.net.anthill.security.AuthenticationFacade;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,14 +57,16 @@ public class TicketService {
     }
 
 
-    public void createTicket(@NotNull TicketDto ticketDto){
+    public TicketDto createTicket(@NotNull TicketDto ticketDto){
         log.trace("createTicket started");
         //TODO In future either do this in mapper or make unique DTO for create call
         TicketDto cleanedDto = deleteUnnecessaryFields(ticketDto);
         Ticket ticket = modelMapper.map(cleanedDto, Ticket.class);
         populateReportingUser(ticket);
         ticketRepository.save(ticket);
+        TicketDto persistedTicketDto = modelMapper.map(ticket, TicketDto.class);
         log.trace("createTicket ended");
+        return persistedTicketDto;
     }
 
     public void updateTicket(@NotNull TicketDto ticketDto){
