@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.net.anthill.AnthillApplication;
+import com.net.anthill.constants.Severity;
 import com.net.anthill.dto.TicketDto;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -33,14 +34,12 @@ public class TicketIntegrationTest {
 
     HttpHeaders headers = new HttpHeaders();
 
+   // TicketDto createdTicket;
+
 
     @Test
-    public void testPostTicket() throws JSONException {
-        String body = "{\n" +
-                "    \"name\": \"Any status or severity possible at the6 ticket creation\",\n" +
-                "    \"description\": \"There is a bug with POST to create ticket is possible to create TICKET in any STATUS or SEVERITY\",\n" +
-                "    \"severity\": \"LOW\"\n" +
-                "}";
+    public void testPostTicket() throws JSONException, JsonProcessingException {
+        String body = createTicketRequestBody("TestName", "Description", Severity.LOW);
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
@@ -52,6 +51,7 @@ public class TicketIntegrationTest {
         System.out.println("response: " + response.getBody());
         //JSONAssert.assertEquals(expected, response.getBody(), false);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+        //createdTicket = objectMapper.readValue(response.getBody(), TicketDto.class);
     }
 
 
@@ -66,7 +66,6 @@ public class TicketIntegrationTest {
     //    String expected = "{\"id\":\"Course1\",\"name\":\"Spring\",\"description\":\"10 Steps\"}";
         System.out.println("response: " + response.getBody());
         objectMapper.configure(DeserializationFeature. FAIL_ON_UNKNOWN_PROPERTIES, false);
-        TicketDto data = objectMapper.readValue(response.getBody(), TicketDto.class);
         //JSONAssert.assertEquals(expected, response.getBody(), false);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
@@ -86,7 +85,7 @@ public class TicketIntegrationTest {
     }
 
     @Test
-    public void testGetTicketById() throws JSONException {
+    public void testGetTicketById() throws JSONException, JsonProcessingException {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> response = getUserRestCall().exchange(//add security
@@ -95,6 +94,8 @@ public class TicketIntegrationTest {
 
         // String expected = "{\"id\":\"Course1\",\"name\":\"Spring\",\"description\":\"10 Steps\"}";
         System.out.println("response: " + response.getBody());
+        TicketDto fetchedData = objectMapper.readValue(response.getBody(), TicketDto.class);
+
         //JSONAssert.assertEquals(expected, response.getBody(), false);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
@@ -112,5 +113,13 @@ public class TicketIntegrationTest {
 
     private TestRestTemplate getUserRestCall(){
         return restTemplate.withBasicAuth("user", "password");
+    }
+
+    private String createTicketRequestBody(String name, String description, Severity severity){
+        return "{\n" +
+                "    \"name\": \""+name+"\",\n" +
+                "    \"description\": \""+description+"\",\n" +
+                "    \"severity\": \""+severity+"\"\n" +
+                "}";
     }
 }
