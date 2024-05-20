@@ -108,13 +108,10 @@ class NoteServiceUnitTest {
 		Authentication authentication = buildAuthentication(username);
 		UserMetadataDto userMetadataDto = buildUserMetadataDto(username);
 		ArgumentCaptor<Note> saveMethodCapture = ArgumentCaptor.forClass(Note.class);
-		//ArgumentCaptor<Note> addNoteToTicketCapture = ArgumentCaptor.forClass(Note.class);
 		Mockito.when(noteRepository.save(any(Note.class))).then(AdditionalAnswers.returnsFirstArg());
 
 		Mockito.when(authenticationFacade.getAuthentication()).thenReturn(authentication);
 		Mockito.when(userMetadataService.getUserMetadataByUsername(username)).thenReturn(userMetadataDto);
-
-		//doNothing().when(ticketService).addNoteToTicket(any(Note.class));
 
 		//WHEN
 		NoteDto resultingNoteDto = NoteService.createNote(noteDto);
@@ -124,12 +121,12 @@ class NoteServiceUnitTest {
 		verify(noteRepository).save(saveMethodCapture.capture());
 		Note persistedItem = saveMethodCapture.getValue();
 		assertThat(persistedItem).isNotNull();
-		assertThat(persistedItem.getId()).isEqualTo(noteDto.getId());
+		assertThat(persistedItem.getId()).isNotEqualTo(noteDto.getId());
+		assertThat(persistedItem.getDescription()).isEqualTo(noteDto.getDescription());
+		assertThat(persistedItem.getName()).isEqualTo(noteDto.getName());
 		assertThat(persistedItem.getCreator()).isNotNull();
 		assertThat(persistedItem.getCreator().getUsername()).isEqualTo(username);
 		assertThat(resultingNoteDto).isNotNull();
-		//verify(ticketService).addNoteToTicket(addNoteToTicketCapture.capture());
-		//assertThat(addNoteToTicketCapture.getValue()).isEqualTo(saveMethodCapture.getValue());
 	}
 
 	@Test

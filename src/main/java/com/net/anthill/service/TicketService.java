@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,17 +29,24 @@ public class TicketService {
     private ModelMapper modelMapper = new ModelMapper();
 
 
+
     @Autowired
     public TicketService(TicketRepo ticketRepository, AuthenticationFacade authenticationFacade, UserMetadataService userMetadataService){
         this.ticketRepository = ticketRepository;
         this.authenticationFacade = authenticationFacade;
         this.userMetadataService = userMetadataService;
+
+        //Initial configurations
+        modelMapper.addMappings(populateHardcodedValues());
     }
 
     public TicketDto getTicketById(long id){
         log.trace("getTicketById started");
         Optional<Ticket> opTicket = ticketRepository.findById(id);
-        TicketDto ticketDto = modelMapper.map(opTicket.get(), TicketDto.class);//TODO handle error in case ticket not found
+        TicketDto ticketDto = null;
+        if (opTicket.isPresent()) {//TODO consider if should be exception or just empty
+            ticketDto = modelMapper.map(opTicket.get(), TicketDto.class);
+        }
         log.trace("getTicketById ended");
         return ticketDto;
     }
@@ -64,7 +70,6 @@ public class TicketService {
         //TODO In future either do this in mapper or make unique DTO for create call
        // TicketDto cleanedDto = deleteUnnecessaryFields(ticketDto);
         System.out.println("Sent ticketDto "+ ticketDto.getId() + " _ "+ ticketDto.getStatus() + " _ "+ ticketDto.getDateCreated());
-        modelMapper.addMappings(mappingsUpdated());
         Ticket ticket = modelMapper.map(ticketDto, Ticket.class);
         System.out.println("Sent ticket "+ ticket.getId() + " _ "+ ticket.getStatus() + " _ "+ ticket.getDateCreated());
 
@@ -110,11 +115,10 @@ public class TicketService {
         log.trace("populateReportingUser ended");
     }
 
-    private PropertyMap<TicketDto,Ticket> mappingsUpdated(){
+    private PropertyMap<TicketDto,Ticket> populateHardcodedValues(){
      return new PropertyMap<TicketDto,Ticket>(){
          @Override
          protected void configure() {
-              //skip(destination.getBlessedField());
                 map().setId(0);
              map().setStatus(Status.NEW);
              map().setDateCreated(new Date());

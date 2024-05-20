@@ -9,6 +9,7 @@ import com.net.anthill.security.AuthenticationFacade;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,10 @@ public class NoteService {
         this.noteRepository = noteRepository;
         this.authenticationFacade = authenticationFacade;
         this.userMetadataService = userMetadataService;
+
+        //Initial configurations
+        modelMapper.addMappings(populateHardcodedValues());
+
     }
 
     public List<NoteDto> getNotes(){
@@ -62,9 +67,7 @@ public class NoteService {
 
     public NoteDto createNote(NoteDto noteDto){
         log.trace("createNote started");
-        NoteDto cleanedUpDto = deleteExtraFields(noteDto); //TODO In future either do this in mapper or make unique DTO for create call
-        System.out.println("deleteNoteById in NoteService called with " + cleanedUpDto.toString());
-        Note note = modelMapper.map(cleanedUpDto, Note.class);
+        Note note = modelMapper.map(noteDto, Note.class);
         populateNotesCreator(note);
         noteRepository.save(note);
         NoteDto persistedNoteDto = modelMapper.map(note, NoteDto.class);
@@ -89,12 +92,14 @@ public class NoteService {
         log.trace("updateNote ended");
     }
 
-    private NoteDto deleteExtraFields(NoteDto noteDto){
-        log.trace("deleteExtraFields started");
-        noteDto.setId(0);
-        noteDto.setDateCreated(new Date());
-        log.trace("deleteExtraFields ended");
-        return noteDto;
+    private PropertyMap<NoteDto, Note> populateHardcodedValues(){
+        return new PropertyMap<NoteDto,Note>(){
+            @Override
+            protected void configure() {
+                map().setId(0);
+                map().setDateCreated(new Date());
+            }
+        };
     }
 
     private void populateNotesCreator(Note note){

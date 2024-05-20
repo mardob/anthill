@@ -101,7 +101,10 @@ class TicketServiceUnitTest {
 		verify(ticketRepository).save(saveMethodCapture.capture());
 		Ticket persistedItem = saveMethodCapture.getValue();
 		assertThat(persistedItem).isNotNull();
-		assertThat(persistedItem.getId()).isEqualTo(ticket.getId());
+		assertThat(persistedItem.getId()).isNotEqualTo(ticket.getId());
+		assertThat(persistedItem.getDescription()).isEqualTo(ticket.getDescription());
+		assertThat(persistedItem.getName()).isEqualTo(ticket.getName());
+		assertThat(persistedItem.getDateCreated()).isNotNull();
 		assertThat(persistedItem.getReportingUser()).isNotNull();
 		assertThat(persistedItem.getReportingUser().getUsername()).isEqualTo(username);
 		assertThat(resultingTicketDto).isNotNull();
@@ -141,7 +144,11 @@ class TicketServiceUnitTest {
 
 
 	private TicketDto buildTicketDto(){
-		return new TicketDto();
+		TicketDto ticketDto = new TicketDto();
+		ticketDto.setId(100);
+		ticketDto.setName("Test name");
+		ticketDto.setDescription("test description");
+		return ticketDto;
 	}
 
 	private Ticket buildTicket() {
@@ -162,9 +169,9 @@ class TicketServiceUnitTest {
 		return list;
 	}
 
-	private Authentication buildAuthentication(String userName){
+	private Authentication buildAuthentication(String username){
 		Authentication authentication = Mockito.mock(Authentication.class);
-		Mockito.when(authentication.getName()).thenReturn(userName);
+		Mockito.when(authentication.getName()).thenReturn(username);
 		return authentication;
 	}
 
