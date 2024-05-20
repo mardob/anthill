@@ -69,6 +69,8 @@ public class NoteService {
         log.trace("createNote started");
         Note note = modelMapper.map(noteDto, Note.class);
         populateNotesCreator(note);
+
+        System.out.println("NO_ " + note.getCreator().getId() + " _ " + note.getTicket().getId() + " _ " + note.getId());
         noteRepository.save(note);
         NoteDto persistedNoteDto = modelMapper.map(note, NoteDto.class);
         log.trace("createNote ended");

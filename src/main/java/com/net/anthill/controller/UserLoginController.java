@@ -21,14 +21,14 @@ public class UserLoginController {
     this.userLoginService = userLoginService;
   }
 
-  @PostMapping(value="/api/admin/users")
+  @PostMapping(value="/v1/admin/users")
   @ResponseBody
   public void createUserLogin(@RequestBody UserLoginDto userLoginDto){
     userLoginService.createUserLogin(userLoginDto);
   }
 
 
-  @GetMapping(value="/api/admin/users")
+  @GetMapping(value="/v1/admin/users")
   @ResponseBody
   public UserLoginDto getUserLogin(@NotBlank @RequestParam String username){
     return userLoginService.getUserLoginById(username);

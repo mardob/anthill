@@ -15,11 +15,8 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
 
-    // @PatchMapping equal to @RequestMapping(method= RequestMethod.PATCH)
-    // @GetMapping     same for get
 
-
-    @GetMapping(value="/api/tickets/")
+    @GetMapping(value="/v1/tickets/")
     @ResponseBody
     public Page<TicketDto> getTickets(
         @RequestParam(required = false, defaultValue = ApiConstants.DEFAULT_PAGE_SIZE, value="pageSize") int pageSize,
@@ -33,7 +30,7 @@ public class TicketController {
         //return tickets;
     }
 
-    @GetMapping(value="/api/tickets/{id}")
+    @GetMapping(value="/v1/tickets/{id}")
     @ResponseBody
     public TicketDto getTicket(@PathVariable(value="id") Long ticketId){
         System.out.println("Fetching TicketDto with id " + ticketId);
@@ -42,20 +39,20 @@ public class TicketController {
     }
 
 
-    @PostMapping(value="/api/tickets/")
+    @PostMapping(value="/v1/tickets/")
     @ResponseBody
     public TicketDto createTicket(@RequestBody TicketDto ticket){
         return ticketService.createTicket(ticket);
     }
 
-    @PutMapping(value="/api/tickets/{id}")
+    @PutMapping(value="/v1/tickets/{id}")
     @ResponseBody
     public void updateTicket(@PathVariable(value="id") Long ticketId, @RequestBody TicketDto ticket){
         ticket.setId(ticketId);
         ticketService.updateTicket(ticket);
     }
 
-    @DeleteMapping(value="/api/tickets/{id}")
+    @DeleteMapping(value="/v1/tickets/{id}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTicket(@PathVariable(value="id") Long ticketId){

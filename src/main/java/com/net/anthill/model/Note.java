@@ -36,6 +36,7 @@ public class Note  {
     @Setter private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="CREATOR_ID")
     @Setter private UserMetadata creator;
 
 
