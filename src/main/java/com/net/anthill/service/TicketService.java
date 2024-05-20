@@ -10,6 +10,8 @@ import com.net.anthill.security.AuthenticationFacade;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,8 +62,12 @@ public class TicketService {
     public TicketDto createTicket(@NotNull TicketDto ticketDto){
         log.trace("createTicket started");
         //TODO In future either do this in mapper or make unique DTO for create call
-        TicketDto cleanedDto = deleteUnnecessaryFields(ticketDto);
-        Ticket ticket = modelMapper.map(cleanedDto, Ticket.class);
+       // TicketDto cleanedDto = deleteUnnecessaryFields(ticketDto);
+        System.out.println("Sent ticketDto "+ ticketDto.getId() + " _ "+ ticketDto.getStatus() + " _ "+ ticketDto.getDateCreated());
+        modelMapper.addMappings(mappingsUpdated());
+        Ticket ticket = modelMapper.map(ticketDto, Ticket.class);
+        System.out.println("Sent ticket "+ ticket.getId() + " _ "+ ticket.getStatus() + " _ "+ ticket.getDateCreated());
+
         populateReportingUser(ticket);
         ticketRepository.save(ticket);
         TicketDto persistedTicketDto = modelMapper.map(ticket, TicketDto.class);
@@ -102,6 +108,18 @@ public class TicketService {
             ticket.setReportingUser(modelMapper.map(userMetadataDto, UserMetadata.class));
         }//TODO add error handling
         log.trace("populateReportingUser ended");
+    }
+
+    private PropertyMap<TicketDto,Ticket> mappingsUpdated(){
+     return new PropertyMap<TicketDto,Ticket>(){
+         @Override
+         protected void configure() {
+              //skip(destination.getBlessedField());
+                map().setId(0);
+             map().setStatus(Status.NEW);
+             map().setDateCreated(new Date());
+         }
+     };
     }
 
 }
