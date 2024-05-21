@@ -2,13 +2,10 @@ package com.net.anthill.service;
 
 import com.net.anthill.dto.UserLoginDto;
 import com.net.anthill.model.UserLogin;
-import com.net.anthill.repository.AuthoritiesRepo;
 import com.net.anthill.repository.UserLoginRepo;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,7 +44,8 @@ public class UserLoginService implements UserDetailsService {
     log.trace("createUserLogin started");
     if(userLoginRepository.existsUserByUsername(userLoginDto.getUsername())){
       System.out.println("User "+userLoginDto.getUsername()+" found");
-      throw new UsernameNotFoundException(userLoginDto.getUsername());
+      return;
+    // TODO send exception
     }
     System.out.println("Username " + userLoginDto.getUsername() + " not found, creating");
     userLoginDto.setPassword(ENCODER.encode(userLoginDto.getPassword()));

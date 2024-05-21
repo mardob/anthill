@@ -3,6 +3,8 @@ package com.net.anthill.controller;
 import com.net.anthill.constants.ApiConstants;
 import com.net.anthill.dto.TicketDto;
 import com.net.anthill.service.TicketService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ public class TicketController {
 
     @GetMapping(value="/v1/tickets/{id}")
     @ResponseBody
-    public TicketDto getTicket(@PathVariable(value="id") Long ticketId){
+    public TicketDto getTicket(@NotNull @PathVariable(value="id") Long ticketId){
         System.out.println("Fetching TicketDto with id " + ticketId);
         TicketDto ticket = ticketService.getTicketById(ticketId);
         return ticket;
@@ -41,13 +43,13 @@ public class TicketController {
 
     @PostMapping(value="/v1/tickets/")
     @ResponseBody
-    public TicketDto createTicket(@RequestBody TicketDto ticket){
+    public TicketDto createTicket(@Valid @RequestBody TicketDto ticket){
         return ticketService.createTicket(ticket);
     }
 
     @PutMapping(value="/v1/tickets/{id}")
     @ResponseBody
-    public void updateTicket(@PathVariable(value="id") Long ticketId, @RequestBody TicketDto ticket){
+    public void updateTicket(@NotNull @PathVariable(value="id") Long ticketId, @Valid @RequestBody TicketDto ticket){
         ticket.setId(ticketId);
         ticketService.updateTicket(ticket);
     }
@@ -55,7 +57,7 @@ public class TicketController {
     @DeleteMapping(value="/v1/tickets/{id}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTicket(@PathVariable(value="id") Long ticketId){
+    public void deleteTicket(@NotNull @PathVariable(value="id") Long ticketId){
         ticketService.deleteTicketById(ticketId);
     }
 

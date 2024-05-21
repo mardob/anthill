@@ -2,6 +2,7 @@ package com.net.anthill.controller;
 
 import com.net.anthill.dto.AuthorityDto;
 import com.net.anthill.service.AuthorityService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class AuthorityController {
 
   @PostMapping(value="/v1/admin/authorities")
   @ResponseBody
-  public void assignAuthority(@RequestBody AuthorityDto authorityDto){
+  public void assignAuthority(@Valid @RequestBody AuthorityDto authorityDto){
     authorityService.createAuthority(authorityDto);
   }
 

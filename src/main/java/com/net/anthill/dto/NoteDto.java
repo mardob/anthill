@@ -1,6 +1,7 @@
 package com.net.anthill.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,9 @@ public class NoteDto extends RepresentationModel<NoteDto> {
 
     @Setter private long id;
 
-    @Setter private String name;
+    @NotBlank(message = "Name is mandatory") @Setter private String name;
 
-    @Setter private String description;
+    @NotBlank(message = "Description is mandatory") @Setter private String description;
 
     @Setter private Date dateCreated = new Date();
 
