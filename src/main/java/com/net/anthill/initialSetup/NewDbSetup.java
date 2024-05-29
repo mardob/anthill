@@ -2,15 +2,14 @@ package com.net.anthill.initialSetup;
 
 import com.net.anthill.dto.AuthorityDto;
 import com.net.anthill.dto.UserLoginDto;
-import com.net.anthill.model.Authority;
 import com.net.anthill.security.SystemAuthority;
 import com.net.anthill.service.AuthorityService;
 import com.net.anthill.service.UserLoginService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component @Slf4j
 public class NewDbSetup {
 
   private UserLoginService userLoginService;
@@ -26,10 +25,10 @@ public class NewDbSetup {
     AuthorityDto authorityDto = new AuthorityDto("admin", SystemAuthority.FULL_ACCESS.name());
     authorityService.createAuthority(authorityDto);
     UserLoginDto userLoginDto = new UserLoginDto("admin", "password",true); //TODO make this configurable
-    try {
+    if(!userLoginService.doesUserExist(userLoginDto.getUsername())){
       userLoginService.createUserLogin(userLoginDto);
-    }catch(UsernameNotFoundException e){
-      System.out.println("User exists no setup required");
+    } else {
+      log.debug(String.format("User [%s] exists no setup required", userLoginDto.getUsername()));
     }
   }
 

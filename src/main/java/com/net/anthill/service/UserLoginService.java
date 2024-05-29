@@ -1,6 +1,7 @@
 package com.net.anthill.service;
 
 import com.net.anthill.dto.UserLoginDto;
+import com.net.anthill.exception.ExternalErrorMessages;
 import com.net.anthill.model.UserLogin;
 import com.net.anthill.repository.UserLoginRepo;
 import jakarta.transaction.Transactional;
@@ -9,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,27 +31,26 @@ public class UserLoginService implements UserDetailsService {
     this.userMetadataService = userMetadataService;
   }
 
-  public UserLoginDto getUserLoginById(String username) {
-    log.trace("getUserLoginById started");
+  public boolean doesUserExist(String username) {
+    log.trace("doesUserExist started");
     System.out.println("Looking for user with following username:" + username);
     UserLogin userLogin = userLoginRepository.findUserLoginByUsername(username);
-    UserLoginDto userLoginDto = modelMapper.map(userLogin, UserLoginDto.class);
-    log.trace("getUserLoginById ended");
-    return userLoginDto;
+    log.trace("doesUserExist ended");
+    return userLogin != null;
   }
   @Transactional
   public void createUserLogin(UserLoginDto userLoginDto){
     log.trace("createUserLogin started");
     if(userLoginRepository.existsUserByUsername(userLoginDto.getUsername())){
-      System.out.println("User "+userLoginDto.getUsername()+" found");
-      return;
-    // TODO send exception
+      String errorMessage = String.format(ExternalErrorMessages.USERNAME_ALREADY_EXISTS, userLoginDto.getUsername());
+      log.warn(errorMessage);
+      throw new RuntimeException(errorMessage);
     }
-    System.out.println("Username " + userLoginDto.getUsername() + " not found, creating");
+    log.debug("Username " + userLoginDto.getUsername() + " not found, creating");
     userLoginDto.setPassword(ENCODER.encode(userLoginDto.getPassword()));
 
     UserLogin userLogin = modelMapper.map(userLoginDto, UserLogin.class);
-    System.out.println("username to add " + userLogin.getUsername());
+    log.debug("username to persist " + userLogin.getUsername());
     userLoginRepository.save(userLogin);
     userMetadataService.createMetadata(userLogin.getUsername());
     log.trace("createUserLogin ended");
@@ -59,13 +58,14 @@ public class UserLoginService implements UserDetailsService {
 
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) {
     log.trace("loadUserByUsername started");
     System.out.println(username);
     UserLogin userLogin = userLoginRepository.findUserLoginByUsername(username);
     if (userLogin == null) {
-      log.warn("loadUserByUsername: User never found in DB");
-      throw new UsernameNotFoundException(username);
+      String errorMessage = String.format(ExternalErrorMessages.USERNAME_DOESNT_EXISTS, username);
+      log.warn(errorMessage);
+      throw new RuntimeException(errorMessage);
     }
     log.trace("loadUserByUsername ended");
     return userLogin;
