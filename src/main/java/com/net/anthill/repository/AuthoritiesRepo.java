@@ -3,12 +3,11 @@ package com.net.anthill.repository;
 import com.net.anthill.model.Authority;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RestResource(exported = false) @Repository
+@RepositoryRestResource(exported = false)
 public interface AuthoritiesRepo extends CrudRepository<Authority, Long> {
-  public Boolean existsAuthorityByUsernameAndAuthority(String username, String authority);
+  Boolean existsAuthorityByUsernameAndAuthority(String username, String authority);
 
-  public List<Authority> findAuthorityByUsername(String username);
+  List<Authority> findAuthorityByUsername(String username);
 }

@@ -2,11 +2,11 @@ package com.net.anthill.repository;
 
 import com.net.anthill.model.UserMetadata;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@Repository
+@RepositoryRestResource
 public interface UserMetadataRepo extends CrudRepository<UserMetadata, Long> {
-  public UserMetadata findUserMetadataByUsername(String username);
+  UserMetadata findUserMetadataByUsername(String username);
 
 
 }
