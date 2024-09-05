@@ -18,7 +18,7 @@ public class UserMetadata {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name="USER_NAME")
+    @Column(name="USER_NAME", unique = true)
     private String username;
 
 
